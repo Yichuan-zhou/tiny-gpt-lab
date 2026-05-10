@@ -9,7 +9,7 @@ git checkout -b week1-bootstrap
 Commit：
 
 ```bash
-git add week01_bootstrap/workspace
+git add week01_bootstrap
 git commit -m "week1 bootstrap"
 ```
 
