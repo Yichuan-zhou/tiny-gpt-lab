@@ -1,39 +1,54 @@
-# bootstrap
+# week01_bootstrap
 
-先跑：
+## Files
+
+- `train.py`: runnable training script
+- `experiment.md`: loss / learning rate notes
+- `notes.md`: environment, changes, open issues
+
+## Run
 
 ```bash
 python week01_bootstrap/train.py
 ```
 
-然后改：
+## Change
 
-- `train.py`
+Start with:
 
-可以先试：
+- `lr`
+- parameter initialization
+- number of steps
 
-- learning rate
-- 初始化
-- step 数
+Keep changes in:
 
-顺手记：
+```text
+week01_bootstrap/
+```
+
+## Record
+
+Update:
 
 - `experiment.md`
 - `notes.md`
 
-push 上来：
+Track:
+
+- command
+- changed value
+- loss pattern
+- error or blocker
+
+## Submit
+
+Use:
 
 - [`../docs/workflow.md`](../docs/workflow.md)
 
-PR 里写：
+PR summary:
 
-- 跑了什么
-- 改了什么
-- 看到什么
-- 卡在哪里
-
-改 learning rate 的时候顺便看：
-
-- loss 会不会下降
-- loss 会不会震荡
-- learning rate 变大或变小时，loss 怎么变
+- command run
+- code change
+- observed behavior
+- blocker, if any
