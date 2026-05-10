@@ -12,6 +12,13 @@
 python week01_bootstrap/train.py
 ```
 
+脚本会自动选择：
+
+- 有 CUDA：`cuda`
+- 没有 CUDA：`cpu`
+
+先确认输出里的 `device=`。
+
 ## 修改
 
 先改这些：
@@ -36,6 +43,7 @@ week01_bootstrap/
 记录这些信息：
 
 - 运行命令
+- `device`
 - 改了什么值
 - `loss` 怎么变化
 - 报错或卡住的地方
@@ -49,6 +57,7 @@ week01_bootstrap/
 PR 里写清楚：
 
 - 跑了什么命令
+- 用的是 `cpu` 还是 `cuda`
 - 改了什么代码
 - 观察到什么现象
 - 有没有卡住的问题
