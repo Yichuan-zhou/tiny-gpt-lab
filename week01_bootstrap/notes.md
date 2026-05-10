@@ -1,26 +1,26 @@
 # notes
 
-## Environment
+## 环境
 
 - Python:
 - PyTorch:
 - CUDA:
 
-## Changes
+## 改动
 
 -
 
-## Observations
+## 观察
 
 -
 
-## Blockers
+## 卡住的问题
 
-- command:
-- output / error:
-- attempted:
-- guess:
+- 命令：
+- 输出 / 报错：
+- 试过什么：
+- 猜测：
 
-## PR Notes
+## PR 备注
 
 -
