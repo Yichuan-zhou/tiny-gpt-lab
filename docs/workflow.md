@@ -6,6 +6,14 @@ Branch：
 git checkout -b week1-bootstrap
 ```
 
+如果已经在 `week1-bootstrap` 上，不用重复执行这一行。
+
+看一下当前改了什么：
+
+```bash
+git status
+```
+
 Commit：
 
 ```bash
@@ -17,6 +25,12 @@ Push：
 
 ```bash
 git push -u origin week1-bootstrap
+```
+
+如果这个 branch 之前已经 push 过，也可以直接：
+
+```bash
+git push
 ```
 
 PR：
