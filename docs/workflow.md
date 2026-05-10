@@ -1,46 +1,77 @@
-# GitHub 工作流说明
+# 日常 Git / PR 工作流
 
-## 0. 创建或连接 GitHub 仓库（只需要做一次）
+这个仓库已经存在，不需要重新创建 remote。日常只需要围绕一个节奏走：
 
-如果项目只在本地，GitHub 页面不会自动更新。需要先把本地仓库连接到 GitHub remote。
-
-```bash
-# 先在 GitHub 上创建仓库，再把本地仓库连接过去
-git remote add origin git@github.com:<your-name>/tiny-gpt-lab.git
-# 或者使用 HTTPS: https://github.com/<your-name>/tiny-gpt-lab.git
-git branch -M main
-git push -u origin main
+```text
+clone -> branch -> edit -> commit -> push -> PR
 ```
 
-## Git 基本工作流
+## 1. Clone
 
-每次作业都使用自己的 branch，不要直接在 `main` 上改：
+第一次拿到仓库时：
 
 ```bash
-git checkout -b week1-yourname
-git add .
-git commit -m "finish week1"
-git push -u origin week1-yourname
+git clone https://github.com/inhalc/tiny-gpt-lab.git
+cd tiny-gpt-lab
 ```
 
-## Pull Request (PR) 工作流
+## 2. Branch
 
-- 不要直接 push 到 `main`
-- 每次提交作业都打开一个 PR
-- 在 PR comments 里讨论问题、解释观察、接受 review
-- 把 PR review 当作一次小型科研讨论
+不要直接改 `main`。每周工作先开一个 branch：
 
-## 提交要求
+```bash
+git checkout -b week1-bootstrap
+```
 
-每周提交应包含：
+## 3. Edit
 
-1. `README.md`：说明目标、结果、观察和问题
-2. `experiment.md`：结构化实验记录
-3. 代码文件：例如 scripts、notebooks 或 configs
+本周所有修改都放在：
 
-## 工作原则
+```text
+week01_bootstrap/workspace/
+```
 
-- 记录你改了什么，以及为什么改
-- 不只报告最终数字，也要报告观察过程
-- 提出可以被测试的问题
-- 优先写下可复现步骤，而不是只说“我试了一下”
+先复制模板和 starter code：
+
+```bash
+mkdir -p week01_bootstrap/workspace
+cp week01_bootstrap/submission_template/README.md week01_bootstrap/workspace/README.md
+cp week01_bootstrap/submission_template/experiment.md week01_bootstrap/workspace/experiment.md
+cp week01_bootstrap/starter_code/train.py week01_bootstrap/workspace/train.py
+```
+
+然后只改 `workspace/` 里的文件。
+
+## 4. Commit
+
+把本周工作记录下来：
+
+```bash
+git add week01_bootstrap/workspace
+git commit -m "week1 bootstrap"
+```
+
+## 5. Push
+
+把 branch 推到 GitHub：
+
+```bash
+git push -u origin week1-bootstrap
+```
+
+## 6. PR
+
+在 GitHub 上打开 Pull Request：
+
+- Base branch：`main`
+- Compare branch：`week1-bootstrap`
+- PR 标题：`Week 1 Bootstrap`
+
+PR 说明里写四件事：
+
+- 我运行了什么
+- 我修改了什么
+- 我观察到了什么
+- 我卡在哪里，想讨论什么
+
+PR 是我们讨论的地方，不只是提交结果的地方。
