@@ -1,33 +1,33 @@
 # experiment
 
-## 第一次
+## Run 1
 
-- 命令：
-
-```bash
-python week01_bootstrap/train.py
-```
-
-- learning rate：
-- 开头几步 loss：
-- 最后几步 loss：
-- 看起来是：下降 / 震荡 / 发散 / 没看出来
-- 备注：
-
-## 改 learning rate 后
-
-- 命令：
+Command:
 
 ```bash
 python week01_bootstrap/train.py
 ```
 
-- learning rate：
-- 开头几步 loss：
-- 最后几步 loss：
-- 看起来是：下降 / 震荡 / 发散 / 没看出来
-- 备注：
+- `lr`:
+- first loss values:
+- final loss values:
+- pattern: decreasing / oscillating / diverging / unclear
+- note:
 
-## 这次看到的
+## Run 2
+
+Command:
+
+```bash
+python week01_bootstrap/train.py
+```
+
+- `lr`:
+- first loss values:
+- final loss values:
+- pattern: decreasing / oscillating / diverging / unclear
+- note:
+
+## Observation
 
 -
