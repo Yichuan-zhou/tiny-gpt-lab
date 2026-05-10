@@ -1,19 +1,18 @@
 # tiny-gpt-lab
 
-先看：
+## Entry Points
 
-- 环境：[`docs/setup.md`](docs/setup.md)
-- 当前推进：[`week01_bootstrap/README.md`](week01_bootstrap/README.md)
+- Environment: [`docs/setup.md`](docs/setup.md)
+- Current work: [`week01_bootstrap/README.md`](week01_bootstrap/README.md)
+- Git / PR: [`docs/workflow.md`](docs/workflow.md)
 
-当前目录：
+## Active Directory
 
 ```text
 week01_bootstrap/
 ```
 
-Git / PR：
-
-- [`docs/workflow.md`](docs/workflow.md)
+## Submit Flow
 
 ```text
 branch -> commit -> push -> PR
