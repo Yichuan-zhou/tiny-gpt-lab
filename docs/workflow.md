@@ -1,35 +1,35 @@
 # git / PR
 
-## Branch
+## 分支
 
 ```bash
 git checkout -b week1-bootstrap
 ```
 
-Skip this if already on `week1-bootstrap`.
+已经在 `week1-bootstrap` 上就不用再执行。
 
-## Inspect
+## 查看状态
 
 ```bash
 git status
 ```
 
-## Commit
+## 提交 commit
 
 ```bash
 git add week01_bootstrap
 git commit -m "week1 bootstrap"
 ```
 
-## Push
+## 推送
 
-First push:
+第一次推这个分支：
 
 ```bash
 git push -u origin week1-bootstrap
 ```
 
-Later pushes:
+后面继续推：
 
 ```bash
 git push
@@ -41,9 +41,9 @@ git push
 - branch: `week1-bootstrap`
 - title: `Week 1 Bootstrap`
 
-Include:
+PR 里写：
 
-- command run
-- code change
-- observed behavior
-- blocker, if any
+- 跑了什么命令
+- 改了什么代码
+- 观察到什么现象
+- 有没有卡住的问题
