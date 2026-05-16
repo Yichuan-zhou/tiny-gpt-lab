@@ -37,8 +37,8 @@ for step in range(steps):
         w -= lr * w.grad
         b -= lr * b.grad
 
-    w.grad.zero_()
-    b.grad.zero_()
+        w.grad.zero_()
+        b.grad.zero_()
 
     if step % 20 == 0 or step == steps - 1:
         with torch.no_grad():

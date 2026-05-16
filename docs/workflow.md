@@ -3,10 +3,10 @@
 ## 分支
 
 ```bash
-git checkout -b week2-bigram
+git checkout -b week1-bootstrap
 ```
 
-已经在对应分支上就不用再执行。
+已经在 `week1-bootstrap` 上就不用再执行。
 
 ## 查看状态
 
@@ -17,8 +17,8 @@ git status
 ## 提交 commit
 
 ```bash
-git add gpt_lab week02_bigram
-git commit -m "week2 bigram baseline"
+git add week01_bootstrap
+git commit -m "week1 bootstrap"
 ```
 
 ## 推送
@@ -26,7 +26,7 @@ git commit -m "week2 bigram baseline"
 第一次推这个分支：
 
 ```bash
-git push -u origin week2-bigram
+git push -u origin week1-bootstrap
 ```
 
 后面继续推：
@@ -38,12 +38,12 @@ git push
 ## PR
 
 - base: `main`
-- branch: `week2-bigram`
-- title: `Week 2 Bigram`
+- branch: `week1-bootstrap`
+- title: `Week 1 Bootstrap`
 
 PR 里写：
 
 - 跑了什么命令
-- 改了什么代码（`gpt_lab/` 里哪些文件）
+- 改了什么代码
 - 观察到什么现象
 - 有没有卡住的问题
