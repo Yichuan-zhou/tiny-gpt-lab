@@ -55,7 +55,10 @@ def train_bigram(cfg, device: str) -> None:
 
 def train_mlp(cfg, device: str) -> None:
     corpus, get_batch = build_dataloader(cfg, device)
-    model = MLPLM(corpus.vocab_size, cfg.block_size, cfg.n_embd).to(device)
+    n_hidden_layers = 2 if cfg.name == "dev_mlp_lr1e3" else 1
+    model = MLPLM(
+        corpus.vocab_size, cfg.block_size, cfg.n_embd, n_hidden_layers=n_hidden_layers
+    ).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=cfg.lr)
     print(f"device={device} stage=mlp params={sum(p.numel() for p in model.parameters())}")
 
