@@ -16,6 +16,7 @@ class BigramLM(nn.Module):
         self.token_emb = nn.Embedding(vocab_size, vocab_size)
 
     def forward(self, idx: torch.Tensor) -> torch.Tensor:
+        # Each token id indexes a row of (vocab, vocab) -> logits for the next char.
         # idx: (B, T) -> logits (B, T, vocab)
         logits = self.token_emb(idx)
         return logits
