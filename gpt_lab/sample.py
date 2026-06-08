@@ -26,6 +26,10 @@ def main() -> None:
 
     model = GPT(cfg, corpus.vocab_size).to(device)
     ckpt_path = Path(args.ckpt)
+    if not ckpt_path.exists():
+        best = ckpt_path.parent / "best.pt"
+        if best.exists():
+            ckpt_path = best
     if ckpt_path.exists():
         state = torch.load(ckpt_path, map_location=device, weights_only=False)
         model.load_state_dict(state["model"])
@@ -33,6 +37,7 @@ def main() -> None:
     else:
         print(f"warning: {ckpt_path} not found, using random weights")
 
+    print(f"prompt={args.prompt!r} temperature={args.temperature} top_k={args.top_k}")
     start = torch.tensor([corpus.encode(args.prompt)], dtype=torch.long, device=device)
     out = model.generate(start, args.max_new_tokens, args.temperature, args.top_k)
     print(corpus.decode(out[0].tolist()))
