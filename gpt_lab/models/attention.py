@@ -47,13 +47,13 @@ class CausalSelfAttention(nn.Module):
         assert n_embd % n_head == 0
         self.n_head = n_head
         self.head_dim = n_embd // n_head
-        self.qkv = nn.Linear(n_embd, 3 * n_embd)
-        self.proj = nn.Linear(n_embd, n_embd)
+        self.c_attn = nn.Linear(n_embd, 3 * n_embd)
+        self.c_proj = nn.Linear(n_embd, n_embd)
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         B, T, C = x.shape
-        qkv = self.qkv(x)
+        qkv = self.c_attn(x)
         q, k, v = qkv.split(C, dim=2)
         q = q.view(B, T, self.n_head, self.head_dim).transpose(1, 2)
         k = k.view(B, T, self.n_head, self.head_dim).transpose(1, 2)
@@ -66,4 +66,4 @@ class CausalSelfAttention(nn.Module):
         att = self.dropout(att)
         y = att @ v
         y = y.transpose(1, 2).contiguous().view(B, T, C)
-        return self.proj(y)
+        return self.c_proj(y)
