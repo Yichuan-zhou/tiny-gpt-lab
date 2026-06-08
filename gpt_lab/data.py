@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import torch
-from torch.utils.data import Dataset
 
 from gpt_lab.config import TrainConfig
 
@@ -23,13 +22,35 @@ class CharCorpus:
         return "".join(self.itos[i] for i in ids)
 
 
+class BPECorpus:
+    """GPT-2 BPE encode/decode via tiktoken."""
+
+    def __init__(self, text: str, encoding_name: str = "gpt2"):
+        import tiktoken
+
+        self.enc = tiktoken.get_encoding(encoding_name)
+        self.vocab_size = self.enc.n_vocab
+        self.data = torch.tensor(self.enc.encode(text), dtype=torch.long)
+
+    def encode(self, s: str) -> list[int]:
+        return self.enc.encode(s)
+
+    def decode(self, ids: list[int]) -> str:
+        return self.enc.decode(ids)
+
+
 def load_char_corpus(path: str) -> CharCorpus:
     text = open(path, encoding="utf-8").read()
     return CharCorpus(text)
 
 
+def load_bpe_corpus(path: str) -> BPECorpus:
+    text = open(path, encoding="utf-8").read()
+    return BPECorpus(text)
+
+
 def get_batch(
-    corpus: CharCorpus,
+    corpus: CharCorpus | BPECorpus,
     block_size: int,
     batch_size: int,
     device: str,
@@ -44,16 +65,13 @@ def get_batch(
     return x.to(device), y.to(device)
 
 
-def get_bpe_batch(cfg: TrainConfig, device: str) -> tuple[torch.Tensor, torch.Tensor]:
-    """Week06+: load memmap / tiktoken batch. Stub falls back to char for dev."""
-    corpus = load_char_corpus(cfg.data_path)
-    return get_batch(corpus, cfg.block_size, cfg.batch_size, device)
-
-
 def build_dataloader(cfg: TrainConfig, device: str):
     if cfg.vocab == "char":
         corpus = load_char_corpus(cfg.data_path)
-        return corpus, lambda split="train": get_batch(
-            corpus, cfg.block_size, cfg.batch_size, device, split
-        )
-    return None, lambda split="train": get_bpe_batch(cfg, device)
+    elif cfg.vocab == "bpe":
+        corpus = load_bpe_corpus(cfg.data_path)
+    else:
+        raise ValueError(f"unknown vocab: {cfg.vocab}")
+    return corpus, lambda split="train": get_batch(
+        corpus, cfg.block_size, cfg.batch_size, device, split
+    )

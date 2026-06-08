@@ -7,8 +7,6 @@ Week07–08: same file; training & sampling use checkpoints.
 
 from __future__ import annotations
 
-import math
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -18,45 +16,51 @@ from gpt_lab.models.attention import CausalSelfAttention
 
 
 class MLP(nn.Module):
+    """GPT-2 feed-forward: c_fc -> GELU -> c_proj."""
+
     def __init__(self, n_embd: int, dropout: float):
         super().__init__()
-        self.net = nn.Sequential(
-            nn.Linear(n_embd, 4 * n_embd),
-            nn.GELU(),
-            nn.Linear(4 * n_embd, n_embd),
-            nn.Dropout(dropout),
-        )
+        self.c_fc = nn.Linear(n_embd, 4 * n_embd)
+        self.c_proj = nn.Linear(4 * n_embd, n_embd)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.net(x)
+        x = self.c_fc(x)
+        x = F.gelu(x)
+        x = self.c_proj(x)
+        return self.dropout(x)
 
 
 class Block(nn.Module):
+    """GPT-2 transformer block: ln_1 -> attn -> residual -> ln_2 -> mlp -> residual."""
+
     def __init__(self, cfg: TrainConfig):
         super().__init__()
-        self.ln1 = nn.LayerNorm(cfg.n_embd)
+        self.ln_1 = nn.LayerNorm(cfg.n_embd)
         self.attn = CausalSelfAttention(cfg.n_embd, cfg.n_head, cfg.dropout)
-        self.ln2 = nn.LayerNorm(cfg.n_embd)
+        self.ln_2 = nn.LayerNorm(cfg.n_embd)
         self.mlp = MLP(cfg.n_embd, cfg.dropout)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = x + self.attn(self.ln1(x))
-        x = x + self.mlp(self.ln2(x))
+        x = x + self.attn(self.ln_1(x))
+        x = x + self.mlp(self.ln_2(x))
         return x
 
 
 class GPT(nn.Module):
+    """GPT-2 LM: wte + wpe + h (blocks) + ln_f + tied lm_head."""
+
     def __init__(self, cfg: TrainConfig, vocab_size: int):
         super().__init__()
         self.cfg = cfg
         self.block_size = cfg.block_size
-        self.token_emb = nn.Embedding(vocab_size, cfg.n_embd)
-        self.pos_emb = nn.Embedding(cfg.block_size, cfg.n_embd)
+        self.wte = nn.Embedding(vocab_size, cfg.n_embd)
+        self.wpe = nn.Embedding(cfg.block_size, cfg.n_embd)
         self.drop = nn.Dropout(cfg.dropout)
-        self.blocks = nn.ModuleList([Block(cfg) for _ in range(cfg.n_layer)])
+        self.h = nn.ModuleList([Block(cfg) for _ in range(cfg.n_layer)])
         self.ln_f = nn.LayerNorm(cfg.n_embd)
         self.lm_head = nn.Linear(cfg.n_embd, vocab_size, bias=False)
-        self.token_emb.weight = self.lm_head.weight  # weight tying
+        self.wte.weight = self.lm_head.weight
 
         self.apply(self._init_weights)
 
@@ -77,9 +81,9 @@ class GPT(nn.Module):
                 targets = targets[:, -self.block_size :]
 
         pos = torch.arange(0, T, device=idx.device)
-        x = self.token_emb(idx) + self.pos_emb(pos)
+        x = self.wte(idx) + self.wpe(pos)
         x = self.drop(x)
-        for block in self.blocks:
+        for block in self.h:
             x = block(x)
         x = self.ln_f(x)
         logits = self.lm_head(x)

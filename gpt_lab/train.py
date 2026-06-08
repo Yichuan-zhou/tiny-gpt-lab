@@ -76,11 +76,7 @@ def train_mlp(cfg, device: str) -> None:
 
 def train_gpt(cfg, device: str, stage: str) -> None:
     corpus, get_batch = build_dataloader(cfg, device)
-    vocab_size = corpus.vocab_size if corpus is not None else 50257
-    if corpus is None:
-        raise NotImplementedError("week06: implement BPE dataloader for vocab=bpe")
-
-    model = GPT(cfg, vocab_size).to(device)
+    model = GPT(cfg, corpus.vocab_size).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=cfg.lr, betas=(0.9, 0.95), weight_decay=0.1)
     ckpt_dir = cfg.ckpt_dir
     print(f"device={device} stage={stage} params={model.num_params:,}")
