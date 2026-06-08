@@ -74,14 +74,26 @@ def train_mlp(cfg, device: str) -> None:
             print(f"step={step:04d} train_loss={loss.item():.4f} val_loss={val:.4f}")
 
 
+def _lr_at_step(step: int, base_lr: float, max_steps: int) -> float:
+    warmup = max(1, max_steps // 10)
+    if step < warmup:
+        return base_lr * (step + 1) / warmup
+    return base_lr
+
+
 def train_gpt(cfg, device: str, stage: str) -> None:
     corpus, get_batch = build_dataloader(cfg, device)
     model = GPT(cfg, corpus.vocab_size).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=cfg.lr, betas=(0.9, 0.95), weight_decay=0.1)
     ckpt_dir = cfg.ckpt_dir
+    best_val = float("inf")
     print(f"device={device} stage={stage} params={model.num_params:,}")
 
     for step in range(cfg.max_steps):
+        lr = _lr_at_step(step, cfg.lr, cfg.max_steps)
+        for pg in opt.param_groups:
+            pg["lr"] = lr
+
         x, y = get_batch("train")
         opt.zero_grad(set_to_none=True)
         _, loss = model(x, y)
@@ -91,11 +103,16 @@ def train_gpt(cfg, device: str, stage: str) -> None:
 
         if step % cfg.eval_interval == 0 or step == cfg.max_steps - 1:
             val = evaluate(model, get_batch, device)
-            print(f"step={step:04d} train_loss={loss.item():.4f} val_loss={val:.4f}")
+            print(
+                f"step={step:04d} lr={lr:.2e} train_loss={loss.item():.4f} val_loss={val:.4f}"
+            )
             save_checkpoint(ckpt_dir / "latest.pt", model, step, cfg.name)
+            if val < best_val:
+                best_val = val
+                save_checkpoint(ckpt_dir / "best.pt", model, step, cfg.name)
 
     save_checkpoint(ckpt_dir / "latest.pt", model, cfg.max_steps, cfg.name)
-    print(f"checkpoint -> {ckpt_dir / 'latest.pt'}")
+    print(f"checkpoint -> {ckpt_dir / 'latest.pt'} (best val={best_val:.4f})")
 
 
 def main() -> None:
